@@ -8,7 +8,6 @@ import HeroSection from './sections/HeroSection'
 import MarqueeSection from './sections/MarqueeSection'
 import AboutSection from './sections/AboutSection'
 import ServicesSection from './sections/ServicesSection'
-import TechSkillsSection from './sections/TechSkillsSection'
 import ProjectsSection from './sections/ProjectsSection'
 import AchievementsSection from './sections/AchievementsSection'
 import ContactSection from './sections/ContactSection'
@@ -55,13 +54,9 @@ export default function App() {
       {revealed && (
         <>
       <HeroSection />
-      <TickerRibbon
-        items={['Edge AI', 'Voice Biometrics', 'Agentic Systems', 'ML Engineer', 'Builder']}
-      />
       <MarqueeSection />
       <AboutSection />
       <ServicesSection />
-      <TechSkillsSection />
       <ProjectsSection />
       <AchievementsSection />
       <TickerRibbon

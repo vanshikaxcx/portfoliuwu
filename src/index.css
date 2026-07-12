@@ -75,6 +75,17 @@ html.custom-cursor * {
     radial-gradient(30% 25% at 32% 85%, rgba(182, 0, 168, 0.1), transparent 70%),
     radial-gradient(35% 30% at 50% 50%, rgba(255, 255, 255, 0.06), transparent 70%);
   filter: blur(70px);
+  /* Fade the glows out before the section edge so the hero blends
+     smoothly into the section below instead of cutting off */
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 90%);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 90%);
+}
+
+/* The hero's grain also has to fade out, or its subtle brightness lift
+   draws a visible line where the section ends */
+.smoke-bg.grain::after {
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 92%);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 92%);
 }
 
 /* Darker iridescent variant for white sections: ink with a gentle violet cast */
@@ -127,6 +138,37 @@ html.custom-cursor * {
   .holo-text {
     animation: none;
   }
+}
+
+/* Marquee skill words: quiet sheen at rest, animated holographic on hover */
+.skill-word {
+  background: linear-gradient(
+    115deg,
+    #e9e4db 0%,
+    #e7e1e2 45%,
+    #ddd2ea 75%,
+    #cfd5e8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.skill-word:hover {
+  background: linear-gradient(
+    100deg,
+    #e9e4db 0%,
+    #d3bff0 20%,
+    #aecdf0 42%,
+    #ecc3e4 64%,
+    #d3bff0 82%,
+    #e9e4db 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: holo-shift 3s linear infinite;
 }
 
 /* Iridescent chrome text: cream with a soft lavender/ice sheen */
