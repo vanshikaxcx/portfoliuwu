@@ -1,10 +1,4 @@
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useState,
-  type MouseEvent,
-} from 'react'
+import { useCallback, useEffect, useState, type MouseEvent } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -14,6 +8,7 @@ import {
   type MotionValue,
   type Variants,
 } from 'framer-motion'
+import { Github, Link as LinkIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Magnetic } from '@/components/ui/magnetic'
 
@@ -28,36 +23,15 @@ type WrapperStyle = MotionStyle & {
 export interface CarouselStep {
   id: string
   name: string
-  category: string
   title: string
   description: string
-  images: { src: string; className: string; preset?: AnimationPreset; delay?: number }[]
+  tech: string[]
+  image: string
+  github: string
+  live: string
 }
 
-const ANIMATION_PRESETS = {
-  fadeInScale: {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-    transition: { type: 'spring', stiffness: 300, damping: 25, mass: 0.5 },
-  },
-  slideInRight: {
-    initial: { opacity: 0, x: 20 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -20 },
-    transition: { type: 'spring', stiffness: 300, damping: 25, mass: 0.5 },
-  },
-  slideInLeft: {
-    initial: { opacity: 0, x: -20 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: 20 },
-    transition: { type: 'spring', stiffness: 300, damping: 25, mass: 0.5 },
-  },
-} as const
-
-export type AnimationPreset = keyof typeof ANIMATION_PRESETS
-
-function useNumberCycler(totalSteps: number, interval = 5000) {
+function useNumberCycler(totalSteps: number, interval = 6000) {
   const [currentNumber, setCurrentNumber] = useState(0)
 
   useEffect(() => {
@@ -106,44 +80,37 @@ const stepVariants: Variants = {
   active: { scale: 1, opacity: 1 },
 }
 
-interface StepImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string
-  alt: string
+const EASE = [0.22, 1, 0.36, 1] as const
+
+function IconLinkButton({
+  href,
+  label,
+  children,
+}: {
+  href: string
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <Magnetic range={70} intensity={0.4}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={label}
+        data-cursor-morph
+        className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-white text-[#0C0C0C]"
+      >
+        {children}
+      </a>
+    </Magnetic>
+  )
 }
-
-const StepImage = forwardRef<HTMLImageElement, StepImageProps>(
-  ({ src, alt, className, style, ...props }, ref) => (
-    <img
-      ref={ref}
-      alt={alt}
-      className={className}
-      src={src}
-      style={{
-        position: 'absolute',
-        userSelect: 'none',
-        maxWidth: 'unset',
-        ...style,
-      }}
-      onError={(e) => (e.currentTarget.src = placeholderImage(alt))}
-      {...props}
-    />
-  ),
-)
-StepImage.displayName = 'StepImage'
-
-const MotionStepImage = motion.create(StepImage)
-
-const IMG_BASE =
-  'rounded-2xl border border-[#D7E2EA]/20 shadow-2xl shadow-black/50 object-cover invert-hover'
 
 function FeatureCard({
   children,
-  step,
-  steps,
 }: {
   children: React.ReactNode
-  step: number
-  steps: readonly CarouselStep[]
 }) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -168,44 +135,7 @@ function FeatureCard({
       }
     >
       <div className="animated-cards-glow relative w-full overflow-hidden rounded-[40px] border-2 border-[#D7E2EA]/60 bg-[#0C0C0C]">
-        <div className="m-6 sm:m-10 min-h-[520px] md:min-h-[460px] w-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              className="flex w-full flex-col gap-3 md:w-1/2 relative z-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <motion.div
-                className="text-xs sm:text-sm font-medium uppercase tracking-widest text-[#B600A8]"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.05, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {steps[step].category}
-              </motion.div>
-              <motion.h3
-                className="text-[#D7E2EA] font-medium uppercase tracking-tight text-xl sm:text-2xl md:text-3xl"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {steps[step].title}
-              </motion.h3>
-              <motion.p
-                className="text-[#D7E2EA]/70 font-light leading-relaxed text-sm sm:text-base max-w-md"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {steps[step].description}
-              </motion.p>
-            </motion.div>
-          </AnimatePresence>
-          {children}
-        </div>
+        {children}
       </div>
     </motion.div>
   )
@@ -272,51 +202,92 @@ function StepsNav({
 
 export function FeatureCarousel({ steps }: { steps: readonly CarouselStep[] }) {
   const { currentNumber: step, setStep } = useNumberCycler(steps.length)
+  const project = steps[step]
 
   return (
-    <div className="flex flex-col gap-10 w-full max-w-5xl mx-auto">
-      <FeatureCard step={step} steps={steps}>
+    <div className="flex flex-col gap-10 w-full max-w-6xl mx-auto">
+      <FeatureCard>
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
-            {...ANIMATION_PRESETS.fadeInScale}
-            className="absolute inset-0 hidden md:block"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="relative z-10 p-8 sm:p-10 md:p-12 flex flex-col gap-8 md:gap-10"
           >
-            <div className="relative w-full h-full">
-              {steps[step].images.map((img, i) => {
-                const preset = ANIMATION_PRESETS[img.preset ?? 'fadeInScale']
-                return (
-                  <MotionStepImage
-                    key={`${step}-${i}`}
-                    alt={steps[step].title}
-                    src={img.src}
-                    className={cn(IMG_BASE, img.className)}
-                    {...preset}
-                    transition={{ ...preset.transition, delay: img.delay ?? 0 }}
-                  />
-                )
-              })}
+            {/* Icon links, top-left */}
+            <motion.div
+              className="flex gap-4"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05, duration: 0.35, ease: EASE }}
+            >
+              <IconLinkButton href={project.github} label="GitHub repository">
+                <Github className="h-5 w-5 sm:h-6 sm:w-6 pointer-events-none" />
+              </IconLinkButton>
+              <IconLinkButton href={project.live} label="Live project">
+                <LinkIcon className="h-5 w-5 sm:h-6 sm:w-6 pointer-events-none" />
+              </IconLinkButton>
+            </motion.div>
+
+            <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+              {/* Text column */}
+              <div className="flex flex-col gap-6 md:w-[45%]">
+                <motion.h3
+                  className="relative text-[#E9E4DB] font-medium tracking-tight text-3xl sm:text-4xl md:text-5xl"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1, duration: 0.35, ease: EASE }}
+                >
+                  {project.title}
+                </motion.h3>
+                <motion.p
+                  className="text-[#D7E2EA]/60 font-light leading-relaxed text-base sm:text-lg max-w-md"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.16, duration: 0.35, ease: EASE }}
+                >
+                  {project.description}
+                </motion.p>
+                <motion.div
+                  className="flex flex-wrap gap-x-8 gap-y-2 mt-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.22, duration: 0.35, ease: EASE }}
+                >
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="text-[#E9E4DB] font-black uppercase tracking-wider text-sm sm:text-base"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Image column */}
+              <motion.div
+                className="md:w-[55%] w-full"
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.12, duration: 0.4, ease: EASE }}
+              >
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-56 sm:h-72 md:h-[380px] object-cover rounded-2xl invert-hover"
+                  onError={(e) =>
+                    ((e.currentTarget as HTMLImageElement).src = placeholderImage(
+                      project.title,
+                    ))
+                  }
+                />
+              </motion.div>
             </div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Mobile: single stacked image below the text */}
-        <div className="md:hidden mt-6">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={step}
-              src={steps[step].images[0].src}
-              alt={steps[step].title}
-              className={cn(IMG_BASE, 'relative w-full h-48 sm:h-64')}
-              {...ANIMATION_PRESETS.fadeInScale}
-              onError={(e) =>
-                ((e.currentTarget as HTMLImageElement).src = placeholderImage(
-                  steps[step].title,
-                ))
-              }
-            />
-          </AnimatePresence>
-        </div>
       </FeatureCard>
 
       <motion.div

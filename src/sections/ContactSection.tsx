@@ -11,8 +11,8 @@ export default function ContactSection() {
     >
       <FadeIn y={40}>
         <h2
-          className="font-black uppercase leading-[0.85] tracking-tight text-center whitespace-nowrap"
-          style={{ color: CREAM, fontSize: 'clamp(4rem, 16vw, 320px)' }}
+          className="iridescent-text font-black uppercase leading-[0.85] tracking-tight text-center whitespace-nowrap"
+          style={{ fontSize: 'clamp(4rem, 16vw, 320px)' }}
         >
           Let&apos;s Talk
         </h2>

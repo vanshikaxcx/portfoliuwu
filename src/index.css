@@ -60,7 +60,8 @@ html.custom-cursor * {
   filter: invert(1);
 }
 
-/* Soft smoky blobs behind the hero, reference-style */
+/* Soft smoky blobs behind the hero, tinted with the site's holographic
+   purple/blue/magenta accents */
 .smoke-bg::before {
   content: '';
   position: absolute;
@@ -68,11 +69,78 @@ html.custom-cursor * {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(40% 35% at 20% 30%, rgba(255, 255, 255, 0.13), transparent 70%),
-    radial-gradient(35% 30% at 80% 18%, rgba(255, 255, 255, 0.09), transparent 70%),
-    radial-gradient(45% 40% at 68% 75%, rgba(255, 255, 255, 0.11), transparent 70%),
-    radial-gradient(30% 25% at 32% 85%, rgba(255, 255, 255, 0.07), transparent 70%);
+    radial-gradient(40% 35% at 20% 30%, rgba(201, 184, 240, 0.12), transparent 70%),
+    radial-gradient(35% 30% at 80% 18%, rgba(117, 197, 222, 0.1), transparent 70%),
+    radial-gradient(45% 40% at 68% 75%, rgba(118, 33, 176, 0.18), transparent 70%),
+    radial-gradient(30% 25% at 32% 85%, rgba(182, 0, 168, 0.1), transparent 70%),
+    radial-gradient(35% 30% at 50% 50%, rgba(255, 255, 255, 0.06), transparent 70%);
   filter: blur(70px);
+}
+
+/* Darker iridescent variant for white sections: ink with a gentle violet cast */
+.iridescent-text-dark {
+  background: linear-gradient(
+    115deg,
+    #0c0c0c 0%,
+    #1a1224 55%,
+    #33204d 80%,
+    #3d2a55 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Living holographic text for the hero name: pastel hues that slowly
+   drift across the letters, with a faint glow so it pops without shouting */
+.holo-text {
+  background: linear-gradient(
+    100deg,
+    #e9e4db 0%,
+    #d3bff0 20%,
+    #aecdf0 42%,
+    #ecc3e4 64%,
+    #d3bff0 82%,
+    #e9e4db 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: holo-shift 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 28px rgba(203, 184, 240, 0.18));
+}
+
+@keyframes holo-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-text {
+    animation: none;
+  }
+}
+
+/* Iridescent chrome text: cream with a soft lavender/ice sheen */
+.iridescent-text {
+  background: linear-gradient(
+    115deg,
+    #e9e4db 0%,
+    #e7e1e2 45%,
+    #ddd2ea 75%,
+    #cfd5e8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Film-grain overlay */

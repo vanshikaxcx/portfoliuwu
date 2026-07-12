@@ -1,6 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import Lenis from 'lenis'
 import CustomCursor from './components/CustomCursor'
+import Preloader from './components/Preloader'
 import TickerRibbon from './components/TickerRibbon'
 import HeroSection from './sections/HeroSection'
 import MarqueeSection from './sections/MarqueeSection'
@@ -12,6 +14,17 @@ import AchievementsSection from './sections/AchievementsSection'
 import ContactSection from './sections/ContactSection'
 
 export default function App() {
+  const [loading, setLoading] = useState(true)
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // Words roll out starting at 1.4s ("Delivering." drops first);
+    // the panel starts its own drop just after
+    const t = setTimeout(() => setLoading(false), reduced ? 300 : 1800)
+    return () => clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
@@ -36,6 +49,11 @@ export default function App() {
   return (
     <main className="bg-[#0C0C0C]" style={{ overflowX: 'clip' }}>
       <CustomCursor />
+      <AnimatePresence onExitComplete={() => setRevealed(true)}>
+        {loading && <Preloader />}
+      </AnimatePresence>
+      {revealed && (
+        <>
       <HeroSection />
       <TickerRibbon
         items={['Edge AI', 'Voice Biometrics', 'Agentic Systems', 'ML Engineer', 'Builder']}
@@ -52,6 +70,8 @@ export default function App() {
         items={['Let’s Build', 'Something', 'Incredible', 'Together']}
       />
       <ContactSection />
+        </>
+      )}
     </main>
   )
 }

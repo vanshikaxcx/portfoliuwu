@@ -18,8 +18,9 @@ export default function CustomCursor() {
 
   const x = useMotionValue(-100)
   const y = useMotionValue(-100)
-  const springX = useSpring(x, { stiffness: 320, damping: 28, mass: 0.6 })
-  const springY = useSpring(y, { stiffness: 320, damping: 28, mass: 0.6 })
+  // Looser spring so the circle visibly trails the dot on fast movement
+  const springX = useSpring(x, { stiffness: 180, damping: 22, mass: 0.7 })
+  const springY = useSpring(y, { stiffness: 180, damping: 22, mass: 0.7 })
 
   useEffect(() => {
     const canHover = window.matchMedia('(hover: hover)').matches
@@ -69,18 +70,20 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Small center dot; hides while morphing or showing the bubble */}
+      {/* Small dot pinned to the raw mouse position; the circle trails it.
+          Stays visible over the label bubble (inverts to dark there),
+          hides only while engulfing an element. */}
       <motion.div
         className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full bg-[#D7E2EA] mix-blend-difference"
         style={{
-          x: springX,
-          y: springY,
+          x,
+          y,
           width: 8,
           height: 8,
           translateX: '-50%',
           translateY: '-50%',
         }}
-        animate={{ opacity: morph || label ? 0 : 1 }}
+        animate={{ opacity: morph ? 0 : 1 }}
         transition={{ duration: 0.2 }}
       />
 
@@ -99,9 +102,9 @@ export default function CustomCursor() {
             ? { width: morph.w, height: morph.h, borderRadius: morph.r, scale: 1 }
             : label
               ? {
-                  width: Math.max(textW + 48, 64),
-                  height: 56,
-                  borderRadius: 18,
+                  width: Math.max(textW + 16, 40),
+                  height: 42,
+                  borderRadius: 12,
                   scale: 1,
                 }
               : {
@@ -125,7 +128,7 @@ export default function CustomCursor() {
             initial={{ opacity: 0, filter: 'blur(8px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.28, delay: 0.08, ease: 'easeInOut' }}
-            className="text-[#0C0C0C] text-lg font-medium whitespace-nowrap px-5 text-center"
+            className="text-[#0C0C0C] text-base font-medium whitespace-nowrap px-2 text-center"
           >
             {label}
           </motion.span>
@@ -136,7 +139,7 @@ export default function CustomCursor() {
       {label && (
         <span
           ref={measureRef}
-          className="fixed invisible pointer-events-none whitespace-nowrap text-lg font-medium"
+          className="fixed invisible pointer-events-none whitespace-nowrap text-base font-medium"
           aria-hidden="true"
         >
           {label}

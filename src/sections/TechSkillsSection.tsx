@@ -36,7 +36,7 @@ export default function TechSkillsSection() {
     <section className="bg-white px-5 sm:px-8 md:px-10 pb-20 sm:pb-24 md:pb-32">
       <FadeIn>
         <h2
-          className="text-[#0C0C0C] font-black uppercase text-center mb-12 sm:mb-16 md:mb-20"
+          className="iridescent-text-dark font-black uppercase text-center mb-12 sm:mb-16 md:mb-20"
           style={{ fontSize: 'clamp(2rem, 7vw, 90px)' }}
         >
           Tech Stack
